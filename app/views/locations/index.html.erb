@@ -1,4 +1,14 @@
 <h1>Locations#index</h1>
 <p>Find me in app/views/locations/index.html.erb</p>
 
-<%= link_to "Create new location", new_location_path %>
+<%= link_to "Create new location", new_location_path %><br />
+
+<% @list = Location.all %>
+<% @list.each do |x| %>
+  <hr>
+  <%= x.address %>
+  <%= x.latitude %>
+  <%= x.longitude %>
+  <%= link_to 'Delete this Location', location_path(x.id), method: :delete, class: "btn btn-default btn-md" %>
+  <hr>
+<% end %>
