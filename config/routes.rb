@@ -4,6 +4,13 @@ Rails.application.routes.draw do
 
   root 'locations#index'
 
+  get 'locations/new/search' => 'locations#search', as: :search
+
+  post 'locations/new/search' => 'locations#find', as: :find
+
+  get "/geocoding", to: "locations#geocoding", as: "geocoding"
+  get "/reverse_geocoding", to: "locations#reverse_geocoding", as: "reverse_geocoding"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

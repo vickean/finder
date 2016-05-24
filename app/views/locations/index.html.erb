@@ -1,6 +1,7 @@
 <h1>Locations#index</h1>
 <p>Find me in app/views/locations/index.html.erb</p>
 
+<%= link_to "Search a location", search_path %><br />
 <%= link_to "Create new location", new_location_path %><br />
 
 <% @list = Location.all %>
