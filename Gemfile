@@ -26,6 +26,9 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # geocoder stuff
 gem 'geocoder'
 
+# gmaps for rails
+gem 'gmaps4rails'
+
 # nifty-generators
 gem "nifty-generators", :group => :development
 

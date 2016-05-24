@@ -2,51 +2,13 @@ $(window).load(function() {
   loadScript();
 });
 
-
-
-var geocoding  = new google.maps.Geocoder();
-$("#submit_button_geocoding").click(function(){
-  codeAddress(geocoding);
-});
-$("#submit_button_reverse").click(function(){
-  codeLatLng(geocoding);
-});
-
-function codeAddress(geocoding){
-  var address = $("#search_box_geocoding").val();
-  if(address.length > 0){
-    geocoding.geocode({'address': address},function(results, status){
-      if(status == google.maps.GeocoderStatus.OK){
-        map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
-          map: map,
-          position: results[0].geometry.location
-        });
-      } else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
-  } else {
-    alert("Search field can't be blank");
-  }
-}
-
-var marker;
-function createMarker(coords, map, title){
-  marker = new google.maps.Marker({
-    position: coords,
-    map: map,
-    title: title
-  });
-}
-
 var map;
 
 function initialize() {
 
   var mapOptions = {
           center: new google.maps.LatLng( 3.1350473, 101.6300449),
-          zoom: 15,
+          zoom: 13,
           mapTypeId: google.maps.MapTypeId.NORMAL,
           panControl: true,
           scaleControl: false,
@@ -65,8 +27,19 @@ function initialize() {
         codeLatLng(geocoding);
       });
 
-
 }
+
+// add infowindow when clicking on the simple marker marker
+var info = createInfoWindow("Congratulations!");
+google.maps.event.addListener(marker, 'click', function() {
+info.open(map,marker);
+});
+
+// This event listener calls addMarker() when the map is clicked.
+google.maps.event.addListener(map, 'click', function(e) {
+  createMarker(e.LatLng, map, 'Here!');
+});
+
 
 var info;
 function codeLatLng(geocoding){
@@ -150,4 +123,21 @@ function loadScript() {
     '&libraries=drawing'+
     '&callback=initialize';
   document.body.appendChild(script);
+}
+
+var geocoding  = new google.maps.Geocoder();
+$("#submit_button_geocoding").click(function(){
+  codeAddress(geocoding);
+});
+$("#submit_button_reverse").click(function(){
+  codeLatLng(geocoding);
+});
+
+var marker;
+function createMarker(coords, map, title){
+  marker = new google.maps.Marker({
+    position: coords,
+    map: map,
+    title: title
+  });
 }
