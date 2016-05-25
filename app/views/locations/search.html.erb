@@ -3,20 +3,62 @@
 
 <h1>Location Search</h1>
 
-<div id="search_options">
-  <%= link_to "Geocding search", geocoding_path, remote: true, id: "geocoding"%>
-  <%= link_to "Reverse geocding search", reverse_geocoding_path, remote: true, id: "reverse_geocoding"%>
+<div style='width: 800px;'>
+  <div id="map" style='width: 800px; height: 400px;'></div>
 </div>
-<div id="map-container">
-	<div id="map-canvas"></div>
 
-  <div id="geocoding_fields">
-    <%= text_field_tag :search, params[:search], placeholder: "Enter a place", :id => 'search_box_geocoding', class: 'search_box' %>
-    <%= button_tag "Search", id: "submit_button_geocoding", data: { disable_with: "Please wait..." }, class: "submit_button" %>
-  </div>
-  <div id="reverse_geocoding_fields">
-    <%= text_field_tag :search, params[:search], placeholder: "Enter a point (latitude, longitude)", :id => 'search_box_reverse', class: 'search_box' %>
-    <%= button_tag "Search", id: "submit_button_reverse", data: { disable_with: "Please wait..." }, class: "submit_button" %>
-  </div>
+<script>
+$(document).ready(function() {
+// add double click event
+google.maps.event.addListener(Gmaps.map.serviceObject, 'dblclick', function(event) {
+    geocodePoint(event.latLng, function(data) {
+       console.log(data);
+    });
+});
 
-</div>
+
+function geocodePoint(latlng, callback) {
+
+    var street_number = '';
+    var route = '';
+    var country = '';
+    var postal_code = '';
+    var city = '';
+    var full_address = '';
+    var latitude = latlng.lat();
+    var longitude = latlng.lng();
+
+    geocoder.geocode({'latLng': latlng }, function(responses) {
+
+        if (responses &amp;&amp; responses.length &gt; 0) {
+
+              full_address = responses[0].formatted_address;
+
+              responses[0].address_components.forEach(function(el) {
+                  el.types.forEach(function(type) {
+                      if(type == 'street_number') street_number = el.long_name;
+                      if(type == 'route') route = el.long_name;
+                      if(type == 'country') country = el.long_name;
+                      if(type == 'postal_code') postal_code = el.long_name;
+                      if(type == 'locality') city = el.long_name;
+                  })
+              });
+        }
+        else {
+            alert("Could not geocode... :(");
+        }
+
+        callback({
+            street_number: street_number,
+            route: route,
+            postal_code: postal_code,
+            city : city,
+            country: country,
+            latitude: latitude,
+            longitude: longitude,
+            full_address:full_address
+        });
+    });
+}
+});
+</script>

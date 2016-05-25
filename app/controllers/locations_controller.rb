@@ -4,7 +4,9 @@ class LocationsController < ApplicationController
   end
 
   def create
-    @location = Location.new(location_params)
+    edited_params = location_params
+    edited_params["address"] = "#{edited_params["address"]}, #{edited_params["city"]}"
+    @location = Location.new(edited_params)
     if @location.save
       redirect_to locations_path
     else
@@ -35,19 +37,7 @@ class LocationsController < ApplicationController
   end
 
   def location_params
-    params.require(:location).permit(:address, :latitude, :longitude)
-  end
-
-  def geocoding
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def reverse_geocoding
-    respond_to do |format|
-      format.js
-    end
+    params.require(:location).permit(:address, :city, :latitude, :longitude)
   end
 
 end
